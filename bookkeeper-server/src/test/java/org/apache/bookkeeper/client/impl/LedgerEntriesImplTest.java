@@ -103,7 +103,6 @@ public class LedgerEntriesImplTest {
 
             assertEquals(1, entry.getEntryBuffer().refCnt());
         }
-
         try {
             LedgerEntry entry = ledgerEntriesImpl.getEntry(entryId - 1);
             fail("Should get IndexOutOfBoundsException");
