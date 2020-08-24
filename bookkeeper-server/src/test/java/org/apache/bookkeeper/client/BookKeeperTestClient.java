@@ -49,7 +49,7 @@ public class BookKeeperTestClient extends BookKeeper {
             throws IOException, InterruptedException, BKException {
         super(conf, null, null, new UnpooledByteBufAllocator(false),
               statsProvider == null ? NullStatsLogger.INSTANCE : statsProvider.getStatsLogger(""),
-              null, null, null);
+              null, null, null); 
         this.statsProvider = statsProvider;
     }
 

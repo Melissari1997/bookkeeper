@@ -690,7 +690,6 @@ public class LedgerHandle implements WriteHandle {
             cb.readComplete(BKException.Code.ReadException, this, null, ctx);
             return;
         }
-
         asyncReadEntriesInternal(firstEntry, lastEntry, cb, ctx, false);
     }
 
