@@ -21,7 +21,6 @@ package org.apache.bookkeeper.client.impl;
 
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -35,31 +34,30 @@ import org.apache.bookkeeper.client.api.LedgerEntry;
 import org.apache.bookkeeper.client.impl.LedgerEntriesImpl;
 import org.apache.bookkeeper.client.impl.LedgerEntryImpl;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  * Unit test for {@link LedgerEntriesImpl}.
+ * @author Paolo Melissari
  */
 public class LedgerEntriesImplTest {
-    private final int entryNumber = 7;
+    private final int entryNumber = 2;
     private LedgerEntriesImpl ledgerEntriesImpl;
     private final List<LedgerEntry> entryList = Lists.newArrayList();
 
     // content for each entry
     private final long ledgerId = 1234L;
-    private final long entryId = 5678L;
-    private final long length = 9876L;
     private final byte[] dataBytes = "test-ledger-entry-impl".getBytes(UTF_8);
     private final ArrayList<ByteBuf> bufs = Lists.newArrayListWithExpectedSize(entryNumber);
-
-    public LedgerEntriesImplTest () {
+    @Before
+    public void setup() {
         for (int i = 0; i < entryNumber; i++) {
             ByteBuf buf = Unpooled.wrappedBuffer(dataBytes);
             bufs.add(buf);
-
-            entryList.add(LedgerEntryImpl.create(ledgerId + i,
-                entryId + i,
-                length + i,
+            entryList.add(LedgerEntryImpl.create(ledgerId,
+                i,
+                dataBytes.length,
                 buf));
         }
 
@@ -74,15 +72,8 @@ public class LedgerEntriesImplTest {
         bufs.forEach(byteBuf -> assertEquals(0, byteBuf.refCnt()));
 
         try {
-            ledgerEntriesImpl.getEntry(entryId);
-            fail("should fail getEntry after close");
-        } catch (NullPointerException e) {
-            // expected behavior
-        }
-
-        try {
             ledgerEntriesImpl.iterator();
-            fail("should fail iterator after close");
+            fail("Should fail iterator after close");
         } catch (NullPointerException e) {
             // expected behavior
         }
@@ -90,37 +81,54 @@ public class LedgerEntriesImplTest {
 
     @Test
     public void testGetEntry() {
-        for (int i = 0; i < entryNumber; i++) {
-            LedgerEntry entry = ledgerEntriesImpl.getEntry(entryId + i);
-            assertEquals(entryList.get(i).getLedgerId(),  entry.getLedgerId());
-            assertEquals(entryList.get(i).getEntryId(),  entry.getEntryId());
-            assertEquals(entryList.get(i).getLength(),  entry.getLength());
 
-            ByteBuf buf = entry.getEntryBuffer();
-            byte[]  content = new byte[buf.readableBytes()];
-            buf.readBytes(content);
-            assertArrayEquals(dataBytes, content);
-
-            assertEquals(1, entry.getEntryBuffer().refCnt());
+        LedgerEntry actualResult = ledgerEntriesImpl.getEntry(0);
+        assertEquals(entryList.get(0).getLedgerId(),  actualResult.getLedgerId());
+        assertEquals(entryList.get(0).getEntryId(),  actualResult.getEntryId());
+        assertEquals(entryList.get(0).getLength(),  actualResult.getLength());
+        
+        actualResult = ledgerEntriesImpl.getEntry(1);
+        assertEquals(entryList.get(1).getLedgerId(),  actualResult.getLedgerId());
+        assertEquals(entryList.get(1).getEntryId(),  actualResult.getEntryId());
+        assertEquals(entryList.get(1).getLength(),  actualResult.getLength());
+        
+        try{
+        	actualResult = ledgerEntriesImpl.getEntry(-1);
+        	fail("Should get IndexOutOfBoundsException");
+        }catch(Exception e) {
+        	
         }
-        try {
-            LedgerEntry entry = ledgerEntriesImpl.getEntry(entryId - 1);
-            fail("Should get IndexOutOfBoundsException");
-        } catch (IndexOutOfBoundsException e) {
-            // expected behavior
-        }
-
-        try {
-            LedgerEntry entry = ledgerEntriesImpl.getEntry(entryId + entryNumber);
-            fail("Should get IndexOutOfBoundsException");
-        } catch (IndexOutOfBoundsException e) {
-            // expected behavior
-        }
+        
     }
-
+    
     @Test
-    public void testIterator() {
-        Iterator<LedgerEntry> entryIterator = ledgerEntriesImpl.iterator();
-        entryIterator.forEachRemaining(ledgerEntry -> assertEquals(1, ledgerEntry.getEntryBuffer().refCnt()));
+    public void testCreate() {
+    	try{
+    		LedgerEntriesImpl emptyLedgersEntry = LedgerEntriesImpl.create(null); 
+    		fail("Should not create from null");
+    	}
+    	catch(Exception e){
+    		//correct behavior
+    	}
+    	List<LedgerEntry> entryList = Lists.newArrayList();
+    	try{
+    		LedgerEntriesImpl emptyLedgersEntry = LedgerEntriesImpl.create(entryList); 
+    		fail("Should not create an empty list");
+    	}
+    	catch(Exception e){
+    		//correct behavior
+    	}
+    	
+    	entryList.add(LedgerEntryImpl.create(0, 0));
+    	LedgerEntriesImpl actualLedgerEntries = LedgerEntriesImpl.create(entryList);
+    	int size = 0;
+    	 Iterator<LedgerEntry> iterator = actualLedgerEntries.iterator();
+    	while(iterator.hasNext()) {
+    		size++;
+    		iterator.next();
+    	}
+    	assertEquals(entryList.size(),size);
+    	assertEquals(entryList.get(0).getClass(), actualLedgerEntries.getEntry(0).getClass());
+    	assertEquals(entryList.get(0),actualLedgerEntries.getEntry(0));
     }
 }
