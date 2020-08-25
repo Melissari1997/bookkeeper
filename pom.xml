@@ -146,7 +146,7 @@
     <hdrhistogram.version>2.1.10</hdrhistogram.version>
     <jackson.version>2.11.0</jackson.version>
     <jackson-mapper-asl.version>1.9.11</jackson-mapper-asl.version>
-    <jacoco-maven-plugin.version>0.8.0</jacoco-maven-plugin.version>
+    <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
     <jcommander.version>1.48</jcommander.version>
     <jetty.version>9.4.5.v20170502</jetty.version>
     <jline.version>2.11</jline.version>
@@ -187,7 +187,7 @@
     <dockerfile-maven-plugin.version>1.4.13</dockerfile-maven-plugin.version>
     <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
     <license-maven-plugin.version>1.6</license-maven-plugin.version>
-    <jacoco-maven-plugin.version>0.8.0</jacoco-maven-plugin.version>
+    <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
     <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
     <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
     <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
@@ -805,15 +805,10 @@
     </extensions>
     <pluginManagement>
       <plugins>
-	<plugin>
-          <groupId>org.sonarsource.scanner.maven</groupId>
-      <artifactId>sonar-maven-plugin</artifactId>
-      <version>3.6.0.1398</version>
-        </plugin>
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.8.0</version>
+          <version>0.8.5</version>
         </plugin>
 	<plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -1040,28 +1035,4 @@
       </plugin>
     </plugins>
   </build>
-<profiles>
-    <profile>
-      <id>coverage</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.jacoco</groupId>
-            <artifactId>jacoco-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>prepare-agent</id>
-                <goals>
-                  <goal>prepare-agent</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
- </profiles>
 </project>
