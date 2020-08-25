@@ -289,17 +289,12 @@
             <version>1.5.2</version>
             <configuration>
               <targetClasses>
-                <param>org.apache.bookkeeper.bookie.BufferedChannel</param>
-                <param>org.apache.bookkeeper.bookie.storage.ldb.LedgerMetadataIndex</param>
+                <param>org.apache.bookkeeper.client.LedgerHandle</param>
+                <param>org.apache.bookkeeper.client.impl.LedgerEntriesImpl</param>
               </targetClasses>
               <targetTests>
-                  <param>org.apache.bookkeeper.bookie.BufferedChannelReadTest</param>
-                  <param>org.apache.bookkeeper.bookie.BufferedChannelWriteTest</param>
-                  <param>org.apache.bookkeeper.bookie.storage.ldb.SetFencedTest</param>
-                  <param>org.apache.bookkeeper.bookie.storage.ldb.SetLedgerMetadataTest</param>
-                  <param>org.apache.bookkeeper.bookie.storage.ldb.SetMasterKeyTest</param>
-                  <param>org.apache.bookkeeper.bookie.storage.ldb.GetLedgerMetadataTest</param>
-                  <param>org.apache.bookkeeper.bookie.storage.ldb.DeleteLedgerMetadataTest</param>
+                  <param>org.apache.bookkeeper.test.TestAsyncReadEntries</param>
+                  <param>oorg.apache.bookkeeper.client.impl.LedgerEntriesImplTest</param>
               </targetTests>
               <avoidCallsTo>
                 <avoidCallsTo>java.util.logging</avoidCallsTo>
