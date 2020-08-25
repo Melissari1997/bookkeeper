@@ -39,6 +39,7 @@ import org.junit.Test;
 
 /**
  * Unit test for {@link LedgerEntriesImpl}.
+ * 
  * @author Paolo Melissari
  */
 public class LedgerEntriesImplTest {
@@ -46,10 +47,11 @@ public class LedgerEntriesImplTest {
     private LedgerEntriesImpl ledgerEntriesImpl;
     private final List<LedgerEntry> entryList = Lists.newArrayList();
 
-    // content for each entry
     private final long ledgerId = 1234L;
-    private final byte[] dataBytes = "test-ledger-entry-impl".getBytes(UTF_8);
+    private final byte[] dataBytes = "test entry data".getBytes(UTF_8);
     private final ArrayList<ByteBuf> bufs = Lists.newArrayListWithExpectedSize(entryNumber);
+    
+    
     @Before
     public void setup() {
         for (int i = 0; i < entryNumber; i++) {

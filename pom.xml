@@ -50,6 +50,7 @@
     <system>Jenkins</system>
     <url>https://builds.apache.org/job/bookkeeper-master</url>
   </ciManagement>
+
   <modules>
     <module>buildtools</module>
     <module>bookkeeper-common</module>
@@ -65,6 +66,7 @@
     <module>bookkeeper-http</module>
     <module>stream</module>
     <module>tools</module>
+    <module>jacoco-reports</module>
     <module>metadata-drivers</module>
     <module>bookkeeper-dist</module>
     <module>shaded</module>
@@ -102,6 +104,13 @@
       <organization>Apache Software Foundation</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>
     </developer>
+    <developer>
+      <name>Paolo Melissari</name>
+      <email>paolo.melissari@alumni.uniroma2.eu</email>
+      <organization>Scuderia Tor Vergata</organization>
+      <organizationUrl>https://www.scuderiatorvergata.it/formula-sae/</organizationUrl>
+    </developer>
+
   </developers>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -137,6 +146,7 @@
     <hdrhistogram.version>2.1.10</hdrhistogram.version>
     <jackson.version>2.11.0</jackson.version>
     <jackson-mapper-asl.version>1.9.11</jackson-mapper-asl.version>
+    <jacoco-maven-plugin.version>0.8.0</jacoco-maven-plugin.version>
     <jcommander.version>1.48</jcommander.version>
     <jetty.version>9.4.5.v20170502</jetty.version>
     <jline.version>2.11</jline.version>
@@ -197,6 +207,7 @@
     <puppycrawl.checkstyle.version>6.19</puppycrawl.checkstyle.version>
     <spotbugs-maven-plugin.version>3.1.8</spotbugs-maven-plugin.version>
     <forkCount.variable>1</forkCount.variable>
+    <aggregate.report.dir>jacoco-reports/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
   </properties>
 
   <!-- dependency definitions -->
@@ -794,7 +805,17 @@
     </extensions>
     <pluginManagement>
       <plugins>
+	<plugin>
+          <groupId>org.sonarsource.scanner.maven</groupId>
+      <artifactId>sonar-maven-plugin</artifactId>
+      <version>3.2</version>
+        </plugin>
         <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>0.8.0</version>
+        </plugin>
+	<plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
           <version>${maven-checkstyle-plugin.version}</version>
@@ -850,6 +871,25 @@
 	      </compilerArgs>
         </configuration>
       </plugin>
+<plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${jacoco-maven-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>prepare-agent</id>
+            <goals>
+             <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <goals>
+             <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+        </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -1000,5 +1040,28 @@
       </plugin>
     </plugins>
   </build>
- 
+<profiles>
+    <profile>
+      <id>coverage</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>prepare-agent</id>
+                <goals>
+                  <goal>prepare-agent</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+ </profiles>
 </project>
