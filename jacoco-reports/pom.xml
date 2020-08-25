@@ -15,7 +15,7 @@
     <sonar.coverage.jacoco.xmlReportPaths>${basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
   </properties>
 
-  <name>Tests</name>
+  <name>jacoco-reports</name>
 
   <dependencies>
     <dependency>
