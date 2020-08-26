@@ -11,6 +11,7 @@ script:
    - mvn package -DfailIfNoTests=false sonar:sonar -Dsonar.projectKey=Melissari1997_bookkeeper 
    #- mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent verify -DfailIfNoTests=false sonar:sonar
   # - mvn package sonar:sonar
+
 after_success:
    - mvn -Ppit-test verify
 
