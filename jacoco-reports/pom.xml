@@ -9,7 +9,7 @@
     <version>4.12.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>tests</artifactId>
+  <artifactId>jacoco-reports</artifactId>
 
   <properties>
     <sonar.coverage.jacoco.xmlReportPaths>${basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
