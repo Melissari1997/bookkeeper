@@ -12,6 +12,6 @@ script:
    #- mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent verify -DfailIfNoTests=false sonar:sonar
   # - mvn package sonar:sonar
 
-after_success:
-   - mvn -Ppit-test verify
+#after_success:
+#   - mvn -Ppit-test verify
 
