@@ -1,4 +1,4 @@
-package org.apache.bookkeeper.test.util;
+package testisw2.util;
 
 import org.apache.bookkeeper.client.LedgerHandle;
 

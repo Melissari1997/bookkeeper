@@ -1,4 +1,4 @@
-package org.apache.bookkeeper.client.impl;
+package testisw2;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -22,6 +22,7 @@ package org.apache.bookkeeper.client.impl;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import com.google.common.collect.Lists;
@@ -43,7 +44,7 @@ import org.junit.Test;
  * @author Paolo Melissari
  */
 public class LedgerEntriesImplTest {
-    private final int entryNumber = 2;
+    private final int entryNumber = 4;
     private LedgerEntriesImpl ledgerEntriesImpl;
     private final List<LedgerEntry> entryList = Lists.newArrayList();
 
@@ -54,7 +55,7 @@ public class LedgerEntriesImplTest {
     
     @Before
     public void setup() {
-        for (int i = 0; i < entryNumber; i++) {
+        for (int i = 1; i < entryNumber; i++) {
             ByteBuf buf = Unpooled.wrappedBuffer(dataBytes);
             bufs.add(buf);
             entryList.add(LedgerEntryImpl.create(ledgerId,
@@ -62,7 +63,8 @@ public class LedgerEntriesImplTest {
                 dataBytes.length,
                 buf));
         }
-
+        
+ 
         ledgerEntriesImpl = LedgerEntriesImpl.create(entryList);
     }
 
@@ -83,23 +85,48 @@ public class LedgerEntriesImplTest {
 
     @Test
     public void testGetEntry() {
-
-        LedgerEntry actualResult = ledgerEntriesImpl.getEntry(0);
-        assertEquals(entryList.get(0).getLedgerId(),  actualResult.getLedgerId());
-        assertEquals(entryList.get(0).getEntryId(),  actualResult.getEntryId());
-        assertEquals(entryList.get(0).getLength(),  actualResult.getLength());
-        
-        actualResult = ledgerEntriesImpl.getEntry(1);
-        assertEquals(entryList.get(1).getLedgerId(),  actualResult.getLedgerId());
-        assertEquals(entryList.get(1).getEntryId(),  actualResult.getEntryId());
-        assertEquals(entryList.get(1).getLength(),  actualResult.getLength());
-        
+    	LedgerEntry actualResult = null;
         try{
-        	actualResult = ledgerEntriesImpl.getEntry(-1);
+        	actualResult = ledgerEntriesImpl.getEntry(1);
+        	assertEquals(entryList.get(0).getLedgerId(),  actualResult.getLedgerId());
+            assertEquals(entryList.get(0).getEntryId(),  actualResult.getEntryId());
+            assertEquals(entryList.get(0).getLength(),  actualResult.getLength());
+	    
+        }catch(Exception e) {
+        	fail("Exception");
+        }
+        
+        try {
+            actualResult = ledgerEntriesImpl.getEntry(3);
+            assertEquals(entryList.get(2).getLedgerId(),  actualResult.getLedgerId());
+            assertEquals(entryList.get(2).getEntryId(),  actualResult.getEntryId());
+            assertEquals(entryList.get(2).getLength(),  actualResult.getLength());
+        }catch(Exception e) {
+        	fail("Exception");
+        }  
+	
+        try{
+        	actualResult = ledgerEntriesImpl.getEntry(0);
         	fail("Should get IndexOutOfBoundsException");
         }catch(Exception e) {
         	
         }
+        try{
+        	actualResult = ledgerEntriesImpl.getEntry(4);  //adeguacy
+        	fail("Should get IndexOutOfBoundsException");
+        }catch(Exception e) {
+        	
+        }
+        /*
+        List<LedgerEntry> emptyEntiesList = Lists.newArrayList();
+        LedgerEntriesImpl emptyList = LedgerEntriesImpl.create(emptyEntiesList);
+        try {
+        	emptyList.getEntry(0);
+        }catch(Exception e) {
+        	
+        }
+        */
+
         
     }
     
@@ -133,4 +160,5 @@ public class LedgerEntriesImplTest {
     	assertEquals(entryList.get(0).getClass(), actualLedgerEntries.getEntry(0).getClass());
     	assertEquals(entryList.get(0),actualLedgerEntries.getEntry(0));
     }
+
 }

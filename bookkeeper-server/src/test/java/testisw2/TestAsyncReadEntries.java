@@ -1,4 +1,4 @@
-package org.apache.bookkeeper.test;
+package testisw2;
 
 import static org.junit.Assert.assertEquals;
 
@@ -25,27 +25,30 @@ import static org.junit.Assert.assertEquals;
 
 import static org.junit.Assert.fail;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.CountDownLatch;
-
 import org.apache.bookkeeper.client.BKException;
+import org.apache.bookkeeper.client.BookKeeper;
 import org.apache.bookkeeper.client.BookKeeper.DigestType;
 import org.apache.bookkeeper.client.LedgerHandle;
-import org.apache.bookkeeper.client.api.LedgerEntries;
+import org.apache.bookkeeper.conf.ClientConfiguration;
 import org.apache.bookkeeper.client.AsyncCallback.ReadCallback;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.apache.bookkeeper.test.util.CustomContextObject;
-import org.apache.bookkeeper.test.util.CustomReadCallback;
+
+import testisw2.util.BookkeeperSetup;
+import testisw2.util.CustomContextObject;
+import testisw2.util.CustomReadCallback;
+
+import org.apache.zookeeper.ZooKeeper;
 /**
  * Test Create/Delete ledgers.
  */
 @RunWith(Parameterized.class)
-public class TestAsyncReadEntries extends BookKeeperClusterTestCase {
+public class TestAsyncReadEntries extends BookkeeperSetup {
 	private ReadCallback customReadCallback;
 	private Object customContextObject;
 	private long firstEntry;
@@ -53,8 +56,8 @@ public class TestAsyncReadEntries extends BookKeeperClusterTestCase {
 	private int expectedResult;
 	
 	
-    public TestAsyncReadEntries(long firstEntry, long lastEntry, ReadCallback cb, Object ctx, int expectedResult) {
-        super(1);
+    public TestAsyncReadEntries(long firstEntry, long lastEntry, ReadCallback cb, Object ctx, int expectedResult) throws Exception {
+        super();
         this.firstEntry = firstEntry;
         this.lastEntry = lastEntry;
         this.customReadCallback =cb;
@@ -63,7 +66,7 @@ public class TestAsyncReadEntries extends BookKeeperClusterTestCase {
         
     }
 
-    @Override
+
     @Before
     public void setUp() throws Exception {
         baseConf.setOpenFileLimit(1);
@@ -78,7 +81,12 @@ public class TestAsyncReadEntries extends BookKeeperClusterTestCase {
         		//Test suite minimale
         		{-1L, 0L, null, null,0},
         		{0L,-1L, new CustomReadCallback(), new CustomContextObject(),BKException.Code.IncorrectParameterException}, //line 683 LedgerHandle
-        		{1L,1L, new CustomReadCallback(), new CustomContextObject(),BKException.Code.OK}
+        		{1L,1L, new CustomReadCallback(), new CustomContextObject(),BKException.Code.OK},
+        		//adeguacy
+        		{-1L,-2L, new CustomReadCallback(), new CustomContextObject(),BKException.Code.IncorrectParameterException}, 
+        		{0L,6L,new CustomReadCallback(), new CustomContextObject(),BKException.Code.ReadException}, 
+        		//mutation. lastEntry = lastAddConfirmed
+        		{0L,4L,new CustomReadCallback(), new CustomContextObject(),BKException.Code.OK}, 
         		});
         };
         
@@ -89,6 +97,7 @@ public class TestAsyncReadEntries extends BookKeeperClusterTestCase {
             
         	for (int j = 0; j < 5; j++) {
                 lh.addEntry("just test".getBytes());
+              
             }
             try{
             	((CustomReadCallback)this.customReadCallback).setCountDownLatch(counter);
@@ -103,9 +112,11 @@ public class TestAsyncReadEntries extends BookKeeperClusterTestCase {
             	}
             }
             counter.await();
+            
             assertEquals(this.expectedResult, ((CustomReadCallback)this.customReadCallback).getRc());
             assertEquals(lh, ((CustomContextObject)this.customContextObject).getLedgerHandle());
         }
+      
    
 
 }
