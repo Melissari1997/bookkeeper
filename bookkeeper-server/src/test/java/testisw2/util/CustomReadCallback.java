@@ -13,6 +13,10 @@ import io.netty.buffer.ByteBuf;
 public class CustomReadCallback implements ReadCallback {
 	private int result= 2;
 	private CountDownLatch latch;
+	private Enumeration<LedgerEntry> entries;
+	public Enumeration<LedgerEntry> getLedgerEntries(){
+		return this.entries;
+	}
 	public void setCountDownLatch(CountDownLatch latch) {
 		this.latch = latch;
 	}
@@ -25,7 +29,9 @@ public class CustomReadCallback implements ReadCallback {
 		if(ctx instanceof CustomContextObject) {
 			CustomContextObject customCtx = (CustomContextObject) ctx;
 			customCtx.setLedgerHandle(lh);
+		
 		}
+		this.entries = seq;
 		this.latch.countDown();
 	}
 
