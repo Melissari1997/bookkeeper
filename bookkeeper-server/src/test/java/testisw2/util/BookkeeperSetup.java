@@ -61,7 +61,7 @@ public abstract class BookkeeperSetup {
 
         try {
             // inizializza Zookeeper
-            startZookeeper();
+        	zkUtil.startZookeeper();
            
             this.metadataServiceUri = zkUtil.getMetadataServiceUri("/ledgers");
             
@@ -83,13 +83,6 @@ public abstract class BookkeeperSetup {
         return dir;
     }
 
-    /**
-     * Inizializzazione di Zookeeper tramite un'istanza della classe ZooKeeperUtil.
-     */
-    protected void startZookeeper() throws Exception {
-        zkUtil.startZookeeper();
-        zkc = zkUtil.getZooKeeperClient();
-    }
 
     /**
      * Crea una configurazione per un BookieServer a partire dalla configurazione base
