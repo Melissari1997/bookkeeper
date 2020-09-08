@@ -104,13 +104,6 @@
       <organization>Apache Software Foundation</organization>
       <organizationUrl>http://www.apache.org</organizationUrl>
     </developer>
-    <developer>
-      <name>Paolo Melissari</name>
-      <email>paolo.melissari@alumni.uniroma2.eu</email>
-      <organization>Scuderia Tor Vergata</organization>
-      <organizationUrl>https://www.scuderiatorvergata.it/formula-sae/</organizationUrl>
-    </developer>
-
   </developers>
   <properties>
              <argLine>-Xmx2G -Djava.net.preferIPv4Stack=true -Dio.netty.leakDetection.level=paranoid</argLine>
