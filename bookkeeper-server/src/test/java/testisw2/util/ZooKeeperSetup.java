@@ -40,15 +40,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Test the zookeeper utilities.
+ * Rivisitazione della classe ZookeeperUtil
  */
 public class ZooKeeperSetup{
 
-    static {
-        // org.apache.zookeeper.test.ClientBase uses FourLetterWordMain, from 3.5.3 four letter words
-        // are disabled by default due to security reasons
-        System.setProperty("zookeeper.4lw.commands.whitelist", "*");
-    }
     static final Logger LOG = LoggerFactory.getLogger(ZooKeeperSetup.class);
 
     // ZooKeeper related variables
@@ -93,10 +88,6 @@ public class ZooKeeperSetup{
             zkaddr = new InetSocketAddress(zkaddr.getHostName(), zooKeeperPort);
             connectString = zkaddr.getHostName() + ":" + zooKeeperPort;
         }
-
-        boolean b = ClientBase.waitForServerUp(connectString,
-                ClientBase.CONNECTION_TIMEOUT);
-        LOG.debug("Server up: " + b);
 
         // create a zookeeper client
         LOG.debug("Instantiate ZK Client");
