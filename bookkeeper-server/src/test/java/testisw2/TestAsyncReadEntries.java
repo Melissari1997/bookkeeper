@@ -82,11 +82,13 @@ public class TestAsyncReadEntries extends BookkeeperSetup {
         		{-1L, 0L, null, null,0},
         		{0L,-1L, new CustomReadCallback(), new CustomContextObject(),BKException.Code.IncorrectParameterException}, //line 683 LedgerHandle
         		{1L,1L, new CustomReadCallback(), new CustomContextObject(),BKException.Code.OK},
+        		
         		//adeguacy
         		{-1L,-2L, new CustomReadCallback(), new CustomContextObject(),BKException.Code.IncorrectParameterException}, 
         		{0L,6L,new CustomReadCallback(), new CustomContextObject(),BKException.Code.ReadException}, 
         		//mutation. lastEntry = lastAddConfirmed
         		{0L,4L,new CustomReadCallback(), new CustomContextObject(),BKException.Code.OK}, 
+        		
         		});
         };
         
