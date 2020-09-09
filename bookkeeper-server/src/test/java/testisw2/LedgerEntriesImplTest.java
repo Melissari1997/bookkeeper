@@ -116,7 +116,7 @@ public class LedgerEntriesImplTest {
         }catch(Exception e) {
         	
         }
-        /*
+        
         List<LedgerEntry> entryList2 = Lists.newArrayList();
         for (int i = 1; i < entryNumber; i++) {
             ByteBuf buf = Unpooled.wrappedBuffer(dataBytes);
@@ -137,7 +137,7 @@ public class LedgerEntriesImplTest {
         }catch(Exception e) {
         	fail("Exception");
         }  
-        */
+        
     }
     
     @Test
